@@ -1,0 +1,4 @@
+CALL apoc.periodic.iterate(
+"CALL apoc.load.json('file:///yelp/yelp_user_1_small.json') YIELD value AS user",
+"WITH user.user_id AS user_id, user.friends_list AS friends_list MERGE (u:User {ID: user_id}) WITH u, friends_list UNWIND friends_list AS friend MERGE (u2:User {ID: friend}) MERGE (u)-[:friends_with]->(u2)",
+{batchSize:2})
