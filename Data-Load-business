@@ -1,3 +1,30 @@
+CALL apoc.load.json("file:///yelp/yelp_business_postproc_attr_100.json") YIELD value AS bus
+WITH bus.attributes AS attributes, bus.business_id AS business_id, bus.name AS name, bus.address AS address, bus.city AS city, bus.state AS state, bus.postal_code AS postal_code, bus.stars AS stars, bus.review_count AS review_count, bus.categories AS categories
+MERGE (b:Business {ID: business_id})
+    SET b.Name=name, b.Address=address, b.Stars=stars, b.Review_Count=review_count
+WITH b, city, state, postal_code, attributes, categories
+    MERGE (c:City {Name: city})
+    MERGE (s:State {Name: state})
+    MERGE (p:Postal {Code: postal_code})
+    MERGE (b)-[:_in_]->(p)
+    MERGE (p)-[:_in_]->(c)
+    MERGE (c)-[:_in_]->(s)
+WITH b, attributes, categories
+    UNWIND categories AS cats
+        MERGE (ca:Category {Name: cats})
+        MERGE (b)-[:falls_in]->(ca)
+WITH attributes.BusinessParking AS attr_busipark, b
+    WHERE attr_busipark IS NOT NULL
+        MERGE (a:Attribute:BusinessParking)
+        WITH a, attr_busipark, b
+        UNWIND attr_busipark AS opt
+            MERGE (b)-[:has {Option: opt}]->(a)
+	    
+	    
+	    
+	    
+
+
 CALL apoc.periodic.iterate(
 "CALL apoc.load.json('file:///yelp/yelp_business.json') YIELD value AS bus", "WITH bus.business_id AS business_id, bus.name AS name, bus.address AS address, bus.city AS city, bus.state AS state MERGE (b:Business {ID: business_id}) MERGE (c:City {Name: city}) MERGE (s:State {Name: state}) MERGE (b)-[:_IN_]->(c) MERGE (c)-[:_IN_]->(s)", 
 {batchsize: 50000});
