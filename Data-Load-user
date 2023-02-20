@@ -4,4 +4,4 @@ user.name AS name, toInteger(user.review_count) AS review_count, toFloat(user.av
 MERGE (u:User {ID: user_id}) SET u.Name=name, u.Review_Count= review_count, u.Stars=average_stars  WITH elite_years, u, friends_list 
 UNWIND friends_list AS friend MERGE (u2:User {ID: friend}) MERGE (u)-[:friends_with]->(u2) WITH elite_years,u 
 UNWIND elite_years AS year WITH toInteger(year) AS year,u WHERE year IS NOT NULL MERGE (e:Elite {Year: year}) MERGE (u)-[:member_in]->(e)",
-{batchSize:10})
+{batchSize:1000})
