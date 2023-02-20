@@ -23,6 +23,23 @@ WITH attributes.BusinessParking AS attr_busipark, b
 	    
 	    
 	    
+CALL apoc.load.json('file:///yelp/yelp_business_final_100.json') YIELD value AS bus
+WITH bus.business_id AS business_id, bus.attributes_list AS attributes_list, bus.attributes_dict AS attributes_dict
+MERGE (b:Business {ID: business_id})
+WITH attributes_list, b, attributes_dict
+UNWIND attributes_list AS attr_from_list
+    MERGE (al:Attribute {Name: attr_from_list})
+    MERGE (b)-[:has]->(al)
+WITH b, attributes_dict
+    UNWIND keys(attributes_dict) AS key_dict
+        UNWIND attributes_dict[key_dict] AS vals
+            MERGE (ad:Attribute {Name: key_dict})
+            MERGE (b)-[:has {Option: vals}]->(ad)
+	    
+	    
+	    
+	    
+	    
 
 
 CALL apoc.periodic.iterate(
