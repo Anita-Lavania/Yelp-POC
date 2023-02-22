@@ -42,9 +42,9 @@ Result:
 
 MATCH (b:Business {ID: '_ab50qdWOk0DdB6XOrBitw'})-[:for_biz]-(r:Review)-[:gave]-(u:User)
   WHERE r.Stars=5.0
-WITH DISTINCT u, u.ID AS user_id, u.Name AS user_name, count(r) AS review_count ORDER BY count(r) DESC LIMIT 1
+WITH DISTINCT u, u.ID AS user_id, u.Name AS user_name, count(r) AS review_count ORDER BY count(r) DESC LIMIT 2
   MATCH p=(u)-[:friends_with]->(fou:User)
-    RETURN fou.ID
+    RETURN user_id, user_name, review_count, fou.ID
     
     
 /////////////////////////////////////////////////////////
