@@ -2,6 +2,10 @@
 // Business name: 'Acme Oyster House'
 // Business ID: '_ab50qdWOk0DdB6XOrBitw'
 
+//////////////////////////////////////////
+/////////////// Query-1 //////////////////
+//////////////////////////////////////////
+
 MATCH (b:Business {ID: '_ab50qdWOk0DdB6XOrBitw'})-[:for_biz]-(r:Review)-[:gave]-(u:User)
   WHERE r.Stars=5.0
 RETURN DISTINCT u.ID, u.Name, count(r) ORDER BY count(r) DESC LIMIT 10
@@ -30,3 +34,20 @@ Result:
 ├────────────────────────┼─────────┼──────────┤
 │"WK0R6JgLM77a9DyuwzGMBw"│"Na"     │2         │
 ------------------------------------------------------
+
+
+/////////////////////////////////////////////////////////
+//////////////////// Query -2 ///////////////////////////
+/////////////////////////////////////////////////////////
+
+MATCH (b:Business {ID: '_ab50qdWOk0DdB6XOrBitw'})-[:for_biz]-(r:Review)-[:gave]-(u:User)
+  WHERE r.Stars=5.0
+WITH DISTINCT u, u.ID AS user_id, u.Name AS user_name, count(r) AS review_count ORDER BY count(r) DESC LIMIT 1
+  MATCH p=(u)-[:friends_with]->(fou:User)
+    RETURN fou.ID
+    
+    
+/////////////////////////////////////////////////////////
+//////////////////// Query-3 ////////////////////////////
+/////////////////////////////////////////////////////////    
+    
