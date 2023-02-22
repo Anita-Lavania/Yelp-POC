@@ -1,4 +1,4 @@
-CALL apoc.load.json('file:///yelp/yelp_user_50k.json') YIELD value AS user
+CALL apoc.load.json('file:///yelp/yelp_user_1.json') YIELD value AS user
 WITH user.user_id AS user_id, user.friends_list AS friends_list, user.name AS name, toInteger(user.review_count) AS review_count, toFloat(user.average_stars) AS average_stars, user.elite_years AS elite_years 
 MERGE (u:User {ID: user_id}) 
   SET u.Name=name, u.Review_Count= review_count, u.Stars=average_stars  
@@ -8,7 +8,7 @@ UNWIND friends_list AS friend
   MERGE (u)-[:friends_with]->(u2) 
 WITH elite_years,u 
 UNWIND elite_years AS year 
-WITH toInteger(year) AS year,u 
-  WHERE year IS NOT NULL 
-  MERGE (e:Elite {Year: year}) 
-  MERGE (u)-[:member_in]->(e)
+  WITH toInteger(year) AS year,u 
+    WHERE year IS NOT NULL 
+    MERGE (e:Elite {Year: year}) 
+    MERGE (u)-[:member_in]->(e)
