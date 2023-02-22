@@ -51,3 +51,24 @@ WITH DISTINCT u, u.ID AS user_id, u.Name AS user_name, count(r) AS review_count 
 //////////////////// Query-3 ////////////////////////////
 /////////////////////////////////////////////////////////    
     
+    
+MATCH (b:Business {ID: '_ab50qdWOk0DdB6XOrBitw'})<-[:for_biz]-(r:Review)<-[:gave]-(u:User)
+WITH DISTINCT u, u.ID AS user_id, u.Name AS user_name, u.Review_Count AS user_rc, count(r) AS my_rc
+  MATCH p=(u)-[:friends_with]->(fou:User)
+  WITH my_rc, user_id, user_name, count(p) AS nof, user_rc, count(p)+user_rc AS influence ORDER BY influence DESC LIMIT 5 
+    RETURN user_id, user_name, nof, user_rc, influence, my_rc
+    
+Result:
+╒════════════════════════╤═══════════╤═════╤═════════╤═══════════╤═══════╕
+│"user_id"               │"user_name"│"nof"│"user_rc"│"influence"│"my_rc"│
+╞════════════════════════╪═══════════╪═════╪═════════╪═══════════╪═══════╡
+│"ITa3vh5ERI90G_WP4SmGUQ"│"Peter"    │6417 │3193     │9610       │1      │
+├────────────────────────┼───────────┼─────┼─────────┼───────────┼───────┤
+│"CQUDh80m48xnzUkx-X5NAw"│"David"    │5195 │4216     │9411       │1      │
+├────────────────────────┼───────────┼─────┼─────────┼───────────┼───────┤
+│"3zxy3LVBV3ttxoYbY4rQ8A"│"Farrah"   │7050 │2073     │9123       │1      │
+├────────────────────────┼───────────┼─────┼─────────┼───────────┼───────┤
+│"j14WgRoU_-2ZE1aw1dXrJg"│"Daniel"   │4646 │4333     │8979       │1      │
+├────────────────────────┼───────────┼─────┼─────────┼───────────┼───────┤
+│"QnIrewrXxFnssw_gG1gF-Q"│"Sarah"    │5844 │2958     │8802       │1      │
+└────────────────────────┴───────────┴─────┴─────────┴───────────┴───────┘
