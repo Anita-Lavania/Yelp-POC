@@ -1,1 +1,32 @@
-MATCH (b:Business {ID: $bid})
+// We are:
+// Business name: 'Acme Oyster House'
+// Business ID: '_ab50qdWOk0DdB6XOrBitw'
+
+MATCH (b:Business {ID: '_ab50qdWOk0DdB6XOrBitw'})-[:for_biz]-(r:Review)-[:gave]-(u:User)
+  WHERE r.Stars=5.0
+RETURN DISTINCT u.ID, u.Name, count(r) ORDER BY count(r) DESC LIMIT 10
+
+Result:
+-------------------------------------------------------
+"u.ID"                  │"u.Name" │"count(r)"│
+╞════════════════════════╪═════════╪══════════╡
+│"LmnaRwoFIR-6H0M5k0mHEg"│"Dan"    │3         │
+├────────────────────────┼─────────┼──────────┤
+│"4enHSrUaObD1nP1n33OnQQ"│"Michael"│2         │
+├────────────────────────┼─────────┼──────────┤
+│"VVN2AiwlANZJdYleGKwtxQ"│"Cori"   │2         │
+├────────────────────────┼─────────┼──────────┤
+│"NBNIUJj60tVBKvWHhy3egg"│"Maya"   │2         │
+├────────────────────────┼─────────┼──────────┤
+│"e7ewJztwTDzNJcoz5aZnIA"│"Darlene"│2         │
+├────────────────────────┼─────────┼──────────┤
+│"hnPTPyh6wNfZe1GxOm21Gg"│"Desiree"│2         │
+├────────────────────────┼─────────┼──────────┤
+│"adaOMpxl2qjze0v6qSaSVA"│"Ricardo"│2         │
+├────────────────────────┼─────────┼──────────┤
+│"ETXHWajX0r1Wc_4cdKgZHw"│"Ricky"  │2         │
+├────────────────────────┼─────────┼──────────┤
+│"mYLOpGJgC75GFpqPFp0gFw"│"Kiki"   │2         │
+├────────────────────────┼─────────┼──────────┤
+│"WK0R6JgLM77a9DyuwzGMBw"│"Na"     │2         │
+------------------------------------------------------
