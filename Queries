@@ -5,6 +5,9 @@
 //////////////////////////////////////////
 /////////////// Query-1 //////////////////
 //////////////////////////////////////////
+// If I am a business, I want to look at which user has highly reviewed (stars=5) my business in the past, and show ads to those users. 
+// Give priority to users that have left highest number of reviews for my business in the past and show top 10 results.
+
 
 MATCH (b:Business {ID: '_ab50qdWOk0DdB6XOrBitw'})-[:for_biz]-(r:Review)-[:gave]-(u:User)
   WHERE r.Stars=5.0
@@ -39,6 +42,9 @@ Result:
 /////////////////////////////////////////////////////////
 //////////////////// Query -2 ///////////////////////////
 /////////////////////////////////////////////////////////
+// If I am a business, show ads to friends of users that have highly reviewed (stars=5) by business. 
+// Again, prioritize users that have left highest number of reviews for my business
+
 
 MATCH (b:Business {ID: '_ab50qdWOk0DdB6XOrBitw'})-[:for_biz]-(r:Review)-[:gave]-(u:User)
   WHERE r.Stars=5.0
@@ -50,7 +56,8 @@ WITH DISTINCT u, u.ID AS user_id, u.Name AS user_name, count(r) AS review_count 
 /////////////////////////////////////////////////////////
 //////////////////// Query-3 ////////////////////////////
 /////////////////////////////////////////////////////////    
-    
+// Show targeted ads of my business to highly influence users (Consider: high degree, high review count, number of fans). 
+// Give top 5 results.    
     
 MATCH (b:Business {ID: '_ab50qdWOk0DdB6XOrBitw'})<-[:for_biz]-(r:Review)<-[:gave]-(u:User)
 WITH DISTINCT u, u.ID AS user_id, u.Name AS user_name, u.Review_Count AS user_rc, count(r) AS my_rc
